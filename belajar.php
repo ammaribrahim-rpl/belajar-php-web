@@ -21,6 +21,12 @@ $body = "Hello World!";
         <input type="email" name="email">
         <button type="submit">Submit</button>
     </form>
+    <h1>
+        <?= $_GET["nama"] ?? '' ?>
+    </h1>
+    <h1>
+        <?= $_GET["email"] ?? '' ?>
+    </h1>
 </body>
 
 </html>
