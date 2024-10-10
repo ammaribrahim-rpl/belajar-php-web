@@ -3,28 +3,30 @@ echo "Belajar aja";
 $judul = "Belajar PHP Web";
 $body = "Form Data Diri";
 
-$nameError = $emailError = "";
-$name = $email = "";
+$nameError = $emailError = $telpError = "";
+$name = $email = $telp = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["nama"])) {
         $nameError = "Nama harus diisi";
     } else {
-        $name = $_POST["nama"];
+        $name = htmlspecialchars($_POST["nama"]);
     }
 
     if (empty($_POST["email"])) {
         $emailError = "Email harus diisi";
     } else {
-        $email = $_POST["email"];
+        $email = htmlspecialchars($_POST["email"]);
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            $emailError = "Invalid Email";
+        }
     }
 
     if (empty($_POST["telp"])) {
         $telpError = "Nomor harus diisi";
     } else {
-        $telp = $_POST["telp"];
+        $telp = htmlspecialchars($_POST["telp"]);
     }
-}
 }
 ?>
 
@@ -92,12 +94,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="nama" placeholder="Masukkan Nama" />
         <span class="error">*<?= $nameError ?></span>
 
-        <input type="email" name="email" placeholder="Masukkan Email" />
+        <input type="text" name="email" placeholder="Masukkan Email" />
         <span class="error">*<?= $emailError ?></span>
 
         <input type="number" name="telp" placeholder="Masukkan Nomor" />
         <span class="error">*<?= $telpError ?></span>
-        
+
         <button type="submit">Submit</button>
     </form>
 
