@@ -1,7 +1,7 @@
 <?php
 
-if(isset($_POST["submit"])){
-    if($_POST["username"] == "admin" && $_POST["password"] == "123"){
+if (isset($_POST["submit"])) {
+    if ($_POST["username"] == "admin" && $_POST["password"] == "123") {
         header("Location: admin.php");
     } else {
         $error = true;
@@ -11,18 +11,25 @@ if(isset($_POST["submit"])){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h1>Login Admin</h1>
 
-    <form action="" method="post">
+    <?php if (isset($error)) : ?>
+        <p style="color: red;">Username atau password salah</p>
+    <?php endif ?>
+
+    <form method="post">
         <input type="text" name="username" placeholder="Masukkan Username">
         <input type="password" name="password" placeholder="********">
         <button type="submit" name="submit">Submit</button>
     </form>
 </body>
+
 </html>
