@@ -1,4 +1,7 @@
 <?php
+
+use LDAP\Result;
+
 include "functions.php";
 
 $students = query("SELECT classes.name AS class_name, majors.name AS major_name, students.* FROM students 
@@ -8,9 +11,7 @@ $students = query("SELECT classes.name AS class_name, majors.name AS major_name,
 $majors = query("SELECT * FROM majors");
 $classes = query("SELECT * FROM classes");
 
-if (isset($_POST["submit"])) {
-    $result = tambah($_POST);
-}
+
 
 ?>
 
@@ -27,14 +28,47 @@ if (isset($_POST["submit"])) {
 </head>
 
 <body>
-    <script>
+
+   <?php
+    if (isset($_POST['submit'])) {
+        $result = tambah($_POST);
+
+        if ($result > 0) {
+            echo
+            "<script>
         Swal.fire({
-            title: 'Error!',
-            text: 'Do you want to continue',
-            icon: 'error',
-            confirmButtonText: 'Cool'
-        })
-    </script>
+            title: 'Good job!',
+            text: 'Successfully added data!',
+            icon: 'Success!'
+        }).then((result) => {
+            window.location.href = 'index.php';
+        });
+    </script>";
+        } else if ($result == -1) {
+            echo
+            "<script>
+        Swal.fire({
+            title: 'Failed!',
+            text: 'NISN already exists!',
+            icon: 'Error!'
+        }).then((result) => {
+            window.location.href = 'index.php';
+        });
+    </script>";
+        } else {
+            echo
+            "<script>
+        Swal.fire({
+            title: 'Failed',
+            text: ' Failed to add data!',
+            icon: 'Error!'
+        }).then((result) => {
+            window.location.href = 'index.php';
+        });
+    </script>";
+        }
+    }
+   ?>
     <!-- Navbar -->
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -69,6 +103,7 @@ if (isset($_POST["submit"])) {
             </div>
         </div>
     </nav>
+
     <!-- Table -->
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg max-w-4xl mx-auto my-24">
         <h1 class="text-3xl text-blue-950 font-bold text-center mb-12">Data Siswa</h1>
@@ -143,7 +178,7 @@ if (isset($_POST["submit"])) {
                                 </div>
                                 <div class="col-span-3">
                                     <label for="alamat" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                                    <textarea id="alamat" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write Address"></textarea>
+                                    <textarea name="alamat" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write Address"></textarea>
                                 </div>
                             </div>
                             <button name="submit" type="submit" class="w-full justify-center text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -153,7 +188,6 @@ if (isset($_POST["submit"])) {
                     </div>
                 </div>
             </div>
-
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -217,6 +251,7 @@ if (isset($_POST["submit"])) {
                         </td>
                         <td class="px-6 py-4">
                             <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            <a href="delete.php?nisn=<?= $student['nisn'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach ?>
